@@ -90,7 +90,7 @@ void Game::whichCharacter() {
         if (chosen_tracks[c] == 0){
                 
                 _player[c].trainCub(_player[c].getStrength(), _player[c].getStamina(), _player[c].getWisdom());
-                _player[c].chooseAdvisor();
+                //_player[c].chooseAdvisor();
 
             }else{
                 _player[c].toPrideLands();
@@ -168,10 +168,10 @@ void Game::startGame() {
             cout<< "|++++++++++++++++++++++++++++++++|" << endl;
             break;
 
-            // case 3:
-            // cout<< _board.displayBoard()<< endl;
+             //case 3:
+             //cout<< _board.displayBoard()<< endl;
             // cout<< "Current position" << _player[currentPlayer].getPlayerPosition();
-            // break;
+             //break;
 
             //case 4:
             

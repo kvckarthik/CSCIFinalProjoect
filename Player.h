@@ -55,7 +55,7 @@ private:
     int _pride_points;
     int _strength;  // Added strength (missing in your initial code)
     int _age;
-    string _advisorName;
+    //string _advisorName;
     int _advisorBoost;
 
 
@@ -71,24 +71,24 @@ public:
     int getWisdom();
     int getPridePoints();
     int getAge();
-    string getAdvisor();
-    int getBoost();
+    // string getAdvisor();
+    // int getBoost();
     
 
     // Setters
-    void setName(string name); 
-    void setStrength(int strength); 
-    void setStamina(int stamina); 
+    void setName(string name);
+    void setStrength(int strength);
+    void setStamina(int stamina);
     void setWisdom(int wisdom);
-    void setPridePoints(int pride_points);  
+    void setPridePoints(int pride_points);
     void setAge(int age);
-    void assignAdvisor(string advisorName, int advisorBoost);
+    // void assignAdvisor(string advisorName, int advisorBoost);
 
     // Other Methods
     void trainCub(int strength, int stamina, int wisdom);
     void toPrideLands();
     void printStats();
-    void chooseAdvisor():
+    //void chooseAdvisor():
 };
 
 #endif

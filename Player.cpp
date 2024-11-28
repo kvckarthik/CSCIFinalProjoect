@@ -190,12 +190,13 @@ int Player::getAge() {
     return _age;
 }
 
-string Player::getAdvisor(){
-    return _advisorName;
-}
+// string Player::getAdvisor(){
+//     return _advisorName;
+// }
 
-int Player:: getBoost();
-retrun _advisorBoost;
+// int Player:: getBoost(){
+// return _advisorBoost;
+// }
 
 void Player::setName(string name) {
     _name = name;
@@ -221,11 +222,11 @@ void Player::setAge(int age) {
     _age = age;
 }
 
-void Player:: assignAdvisor(advisorName, boost){
-     _advisorName = advisorName;
-     _advisorBoost = boost;
-     cout<< _name << " advisor is "<< _advisorName <<endl; 
-}
+// void Player:: assignAdvisor(advisorName, boost){
+//      _advisorName = advisorName;
+//      _advisorBoost = boost;
+//      cout<< _name << " advisor is "<< _advisorName <<endl; 
+// }
 
 void Player::trainCub(int strength, int stamina, int wisdom) {
     // Increase stats when training
@@ -266,30 +267,30 @@ void Player::printStats() {
 }
 
 
-void Player::chooseAdvisor() {
-    vector<Player> advisors = {
-        {"Wise Owl", "A sage who imparts wisdom.", "Wisdom", 5},
-        {"Strong Buffalo", "A mighty protector.", "Strength", 5},
-        {"Agile Cheetah", "Quick and nimble.", "Stamina", 5},
-        {"Kind Meerkat", "Inspires loyalty and pride.", "Pride Points", 10}
-    };
+// void Player::chooseAdvisor() {
+//     vector<Player> advisors = {
+//         {"Wise Owl", "A sage who imparts wisdom.", "Wisdom", 5},
+//         {"Strong Buffalo", "A mighty protector.", "Strength", 5},
+//         {"Agile Cheetah", "Quick and nimble.", "Stamina", 5},
+//         {"Kind Meerkat", "Inspires loyalty and pride.", "Pride Points", 10}
+//     };
 
-    cout << "Welcome to Cub Training! Choose your advisor: ";
-    for (int i = 0; i < advisors.size(); i++) {
-        cout << i + 1 << ". ";
-        advisors[i].printInfo();
-    }
+//     cout << "Welcome to Cub Training! Choose your advisor: ";
+//     for (int i = 0; i < advisors.size(); i++) {
+//         cout << i + 1 << ". ";
+//         advisors[i].printInfo();
+//     }
 
-    int choice;
-    cin >> choice;
+//     int choice;
+//     cin >> choice;
 
-    if (choice >= 1 && choice <= advisors.size()) {
-        assignAdvisor(advisors[choice - 1]);  // Assign the chosen advisor
-    } else {
-        cout << "Invalid choice. Try again.\n";
-        chooseAdvisor();  // Retry until valid choice
-    }
-}
+//     if (choice >= 1 && choice <= advisors.size()) {
+//         assignAdvisor(advisors[choice - 1]);  // Assign the chosen advisor
+//     } else {
+//         cout << "Invalid choice. Try again.\n";
+//         chooseAdvisor();  // Retry until valid choice
+//     }
+// }
 
 
 
