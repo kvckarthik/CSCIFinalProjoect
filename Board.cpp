@@ -85,10 +85,10 @@ void Board::initializeTiles(int player_index)
 
             if(chosen_track==0){   //cub
                 if (i < 26) {
-                graveyardChance = 20; // 20%
-                heyenaChance= 40;  // 20%
-                counclingChance = 55; // 15% 
-                 oasisChance= 80;  // 25%
+                graveyardChance = 2; // 20% 20
+                heyenaChance= 4;  // 20% 40
+                counclingChance = 90; // 15% 55
+                 oasisChance= 95;  // 25% 80
                 challengingChance = 100 ; // 20
 
                 } else {  //second half
@@ -103,7 +103,7 @@ void Board::initializeTiles(int player_index)
             } else { // pridelands
                 if (i < 26) { 
                 graveyardChance = 25; //25%
-                heyenaChance = 50;  // 25%
+                heyenaChance = 50;  // 25% 
                 counclingChance = 70;  // 20% 
                 oasisChance= 75;    // 5%
                 challengingChance = 100; // 25%  
@@ -187,7 +187,7 @@ bool Board::isPlayerOnTile(int player_index, int pos)
     {
         return true;
     }
-    
+
     return false;
 }
 
@@ -282,4 +282,11 @@ int Board::getPlayerPosition(int player_index) const
         return _player_position[player_index];
     }
     return -1;
+}
+
+char Board::getTileColor(int playerIndex, int position){
+    if (position >= 0 && position < _BOARD_SIZE) {
+        return _tiles[playerIndex][position].color;  // Access the color of the tile
+    }
+    return ' ';  // Return a default value for invalid positions
 }

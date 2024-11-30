@@ -25,6 +25,7 @@ public:
     void displayBoard(); // Displays both boards
     bool movePlayer(int player_index, int roll);
     int getPlayerPosition(int player_index) const;
-    void getColor();
+    char getTileColor(int player_index,int rolledPostion);
+    
 };
 #endif

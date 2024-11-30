@@ -31,6 +31,7 @@ class Game{
     bool ending();
     void loadAdvisor(string file, Advisor arr[]);
     void chooseAdvisor (int playing);
+    void triggerEvent(int playing, Player player);
 
 
 

@@ -1,45 +1,3 @@
-// #include<iostream>
-// using namespace std;
-
-// #ifndef PLAYER_H
-// #define PLAYER_H
-
-// class Player{
-//     private:
-//         string _name;
-//         int _stamina;
-//         int _wisdom;
-//         int _pride_points;
-//         int _age;
-//     public:
-//     //constructors
-//         Player();
-//         Player(string name, int strength, int stamina, int wisdom);
-//         //setters
-//         string getName();
-//         int getStrength();
-//         int getStamina();
-//         int getWisdom();
-//         int getPridePoints();
-//         int getAge();
-//         //getters
-//         void setName(string name); 
-//         void setStrength(int strength); 
-//         void setStamina(int stamina); 
-//         void setWisdom(int wisdom);
-//         void setPridePoints(int pride_points);  
-//         void setAge(int age);
-//         //other
-//         void trainCub(int strength, int stamina, int wisdom);
-//         void toPrideLands();
-//         void printStats(); 
-
-
-// };
-
-// #endif
-
-
 #ifndef PLAYER_H
 #define PLAYER_H
 
@@ -59,6 +17,7 @@ private:
     int _age;
     
     Advisor _advisor;
+    bool _hasAdvisor = false;
    
 
 
@@ -74,9 +33,8 @@ public:
     int getWisdom();
     int getPridePoints();
     int getAge();
-    //Board getBoard();
-    // string getAdvisor();
-    // int getBoost();
+    bool checkAdvisor();
+  
     
 
     // Setters
@@ -86,10 +44,12 @@ public:
     void setWisdom(int wisdom);
     void setPridePoints(int pride_points);
     void setAge(int age);
+    void editAdvisor(bool hasAdvisor);
     // void assignAdvisor(string advisorName, int advisorBoost);
 
     // Other Methods
     void trainCub(int strength, int stamina, int wisdom);
+    void train(int strength, int stamina, int wisdom);
     void toPrideLands();
     void printStats();
     //void chooseAdvisor():

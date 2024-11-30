@@ -57,6 +57,8 @@ void Game::loadAdvisor(string file, Advisor arr[]) {
 
 
 void Game::chooseAdvisor(int playing) {
+    bool check = _player[playing].checkAdvisor();
+    if (!check){
     bool validChoice = false;
     int advisorChoice;
 
@@ -91,6 +93,10 @@ void Game::chooseAdvisor(int playing) {
     cout << "Player " << (playing + 1) << " chose " << _player[playing].getAdvisor().getName()
          << " as their advisor with ability: " 
          << _player[playing].getAdvisor().getAbility() << endl;
+
+    }
+    cout<< "You already have an advisor"<< endl;
+    cout<< " "<< endl;
 }
 
 
@@ -176,6 +182,7 @@ void Game::whichCharacter() {
         if (chosen_tracks[c] == 0) {
             _player[c].trainCub(_player[c].getStrength(), _player[c].getStamina(), _player[c].getWisdom());
             chooseAdvisor(c);
+            _player[c].editAdvisor(true);
  // You may add advisor selection here if needed
         } else {
             _player[c].toPrideLands();
@@ -188,6 +195,58 @@ void Game::whichCharacter() {
     cout << "Both players have chosen their lions and selected their paths!" << endl;
 }
 
+
+
+void Game:: triggerEvent(int playerIndex, Player player){
+    int postion = _board.getPlayerPosition(playerIndex);
+    char tileColor= _board.getTileColor(playerIndex, postion);
+
+        switch (tileColor){
+            case 'B':  // Oasis Tile
+        cout << "You've landed on an Oasis Tile! You gain extra resources."<<endl;
+        _player[playerIndex].train(200, 200, 200);
+       
+        
+        // Perform oasis-specific actions
+        break;
+    case 'P':  // Counseling Tile
+        cout << "Welcome to the Counseling Tile! You gain wisdom and can choose an advisor."<<endl;
+         _player[playerIndex].train(300, 300, 300);
+         chooseAdvisor(playerIndex);
+        // Perform counseling-specific actions
+        break;
+    case 'R':  // Graveyard Tile
+        cout << "Oh no, you stumbled into the Graveyard! You lose resources."<<endl;
+        // Perform graveyard-specific actions
+        break;
+    case 'N':  // Hyenas Tile
+        cout << "Watch out, Hyenas are here! You return to your previous position."<<endl;
+        // Perform hyenas-specific actions
+        break;
+    case 'U':  // Challenge Tile
+        cout << "It's a Challenge Tile! Solve a riddle to gain wisdom."<<endl;
+        // Perform challenge-specific actions
+        break;
+    case 'O':  // End Tile
+        cout << "You've reached Pride Rock, the end of the game!"<<endl;
+        // End game or perform final actions
+        break;
+    case 'Y':  // Start Tile
+        cout << "You're at the starting tile. Begin your journey!"<<endl;
+        break;
+    case 'G':  // Regular Tile
+        cout << "You're on a regular tile. Rolling for random events..."<<endl;
+        // Roll for random events, potentially affecting player pride points
+        break;
+    default:
+        cout << "Unknown tile. Nothing happens." <<endl ;
+        break;
+
+        }
+
+
+
+}
 
 
 
@@ -245,6 +304,8 @@ void Game::startGame() {
         //cout << "6. End Game" << endl;
 
         int choice;
+        int playerPosition;
+        char tileType;
         cin>> choice;
 
         switch(choice){
@@ -268,14 +329,21 @@ void Game::startGame() {
             break;
 
              case 3:
-              _board.displayBoard();
+                
+                _board.displayBoard();
+                playerPosition = _board.getPlayerPosition(currentPlayer);
 
-            cout<< "Player "<<(currentPlayer+1)<< "'s Current position " << _board.getPlayerPosition(currentPlayer)<<endl;
+                cout<< "Player "<<(currentPlayer+1)<< "'s Current position " << playerPosition+1 <<endl;
+
+                tileType= _board.getTileColor(currentPlayer, playerPosition);
+
+                cout << "Tile type: " << tileType << endl;
+
             break;
 
             case 4:
-            cout<< "your advisor is";
-           _player[currentPlayer].printAdvisor();
+                cout<< "your advisor is";
+                _player[currentPlayer].printAdvisor();
 
             break;
 
@@ -284,10 +352,13 @@ void Game::startGame() {
             roll = (rand()%6)+1;
             cout<< "Player" << (currentPlayer+1) <<": rolled a " << roll<< "!"<<endl;
 
+            // implement the call to trigger event
+
             if(_board.movePlayer(currentPlayer, roll)){
                 cout<< "Player " << (currentPlayer+1) << "reached the end" << endl;
                 gamePlay=false;
             }else{
+                 triggerEvent(currentPlayer, _player[currentPlayer]);
                 currentPlayer=(currentPlayer+1) % 2;
             }
             break;
@@ -299,7 +370,7 @@ void Game::startGame() {
          }
 
         }
-         
+    }
 
     //   this function is used to controll the game and have each player take turns playing
     // in this function the user is able to do 5 main things (this should most likely be done in a switch statment)
@@ -312,7 +383,7 @@ void Game::startGame() {
 // be able to "roll a random number" and move through the boared
 
 // how can I implement a way for each user to switch between playing while the game is going
-    }
+    
 
     void Game:: endgame(){
 

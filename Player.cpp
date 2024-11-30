@@ -141,6 +141,7 @@ Player::Player()
     _age = 0;
     Advisor _advisor;
     
+    
 }
 
 Player::Player(string name, int strength, int stamina, int wisdom, int age, int pridePoints)
@@ -228,11 +229,7 @@ void Player::setAge(int age) {
     _age = age;
 }
 
-// void Player:: assignAdvisor(advisorName, boost){
-//      _advisorName = advisorName;
-//      _advisorBoost = boost;
-//      cout<< _name << " advisor is "<< _advisorName <<endl; 
-// }
+
 
 void Player::trainCub(int strength, int stamina, int wisdom) {
     // Increase stats when training
@@ -244,6 +241,16 @@ void Player::trainCub(int strength, int stamina, int wisdom) {
     cout<< "YOUR NEW STATS!"<< endl;
     printStats();
     cout<< " "<< endl;
+
+}
+
+void Player:: train(int strength, int stamina, int wisdom){
+     _strength += strength;
+    _stamina += stamina ;
+    _wisdom += wisdom;
+    cout<< "YOUR NEW STATS!"<< endl;
+    printStats();
+    cout << " "<< endl;
 
 }
 
@@ -293,6 +300,14 @@ void Player::printAdvisor() {
     // Print the advisor's information
     cout << "Your advisor is: " << advisor.getName() << endl;
     cout << "Advisor's ability: " << advisor.getAbility() << endl;
+}
+
+bool Player:: checkAdvisor(){
+    return _hasAdvisor;
+}
+
+void Player:: editAdvisor(bool hasAdvisor){
+    _hasAdvisor = hasAdvisor;
 }
 
 
