@@ -127,6 +127,8 @@
 #include <sstream>
 #include <string>
 #include "Player.h"
+#include "Board.h"
+#include "Advisor.h"
 using namespace std;
 
 Player::Player()
@@ -137,9 +139,11 @@ Player::Player()
     _wisdom = 0;
     _pride_points = 0;  // Initialize pride_points
     _age = 0;
+    Advisor _advisor;
+    
 }
 
-Player::Player(string name, int strength, int stamina, int wisdom, int age)
+Player::Player(string name, int strength, int stamina, int wisdom, int age, int pridePoints)
 {
     _name = name;
     
@@ -162,8 +166,10 @@ Player::Player(string name, int strength, int stamina, int wisdom, int age)
         _wisdom = wisdom;
     }
 
-    _pride_points = 0;  // Initialize pride_points
+    _pride_points = pridePoints;  // Initialize pride_points
     _age = age;
+
+    
 }
 
 string Player::getName() {
@@ -231,9 +237,9 @@ void Player::setAge(int age) {
 void Player::trainCub(int strength, int stamina, int wisdom) {
     // Increase stats when training
     cout<< "You have entered Cub training"<< endl;
-    _strength += strength;
-    _stamina += stamina;
-    _wisdom += wisdom;
+    _strength += 500;
+    _stamina += 500 ;
+    _wisdom += 1000;
     _pride_points -= 5000;  // Decrease pride_points (check if this is intentional)
     cout<< "YOUR NEW STATS!"<< endl;
     printStats();
@@ -246,9 +252,9 @@ void Player::toPrideLands() {
     cout<< "You have entered the Pride Lands"<< endl;
      cout<< " "<< endl;
     _pride_points += 5000;  // Gain pride points
-    _strength -= 2000;  // Reduce strength
-    _wisdom -= 2000;  // Reduce wisdom
-    _stamina -= 1000;  // Reduce stamina
+    _strength += 200;  // gains strength
+    _wisdom += 200;  // gains wisdom
+    _stamina += 200;  // gains stamina
     cout<< "YOUR NEW STATS!"<< endl;
      printStats();
     cout<< " "<< endl;
@@ -266,31 +272,27 @@ void Player::printStats() {
     cout<< " "<< endl;
 }
 
+Advisor Player::getAdvisor() {
+    return _advisor;  // Returns a copy of the assigned advisor
+}
 
-// void Player::chooseAdvisor() {
-//     vector<Player> advisors = {
-//         {"Wise Owl", "A sage who imparts wisdom.", "Wisdom", 5},
-//         {"Strong Buffalo", "A mighty protector.", "Strength", 5},
-//         {"Agile Cheetah", "Quick and nimble.", "Stamina", 5},
-//         {"Kind Meerkat", "Inspires loyalty and pride.", "Pride Points", 10}
-//     };
+void Player::setAdvisor( Advisor advisor) {
+    _advisor = advisor;  // Set the Advisor object by copying it into the Player's _advisor field
+}
 
-//     cout << "Welcome to Cub Training! Choose your advisor: ";
-//     for (int i = 0; i < advisors.size(); i++) {
-//         cout << i + 1 << ". ";
-//         advisors[i].printInfo();
-//     }
+void Player::chooseAdvisor(int player) {
+    // Set the advisor for the player
+    setAdvisor(_advisor);  // Reuse the setAdvisor method from earlier to assign the advisor
+    
+}
 
-//     int choice;
-//     cin >> choice;
+void Player::printAdvisor() {
+    // Get the advisor object for this player
+     Advisor advisor = getAdvisor();  //have a getter like this
 
-//     if (choice >= 1 && choice <= advisors.size()) {
-//         assignAdvisor(advisors[choice - 1]);  // Assign the chosen advisor
-//     } else {
-//         cout << "Invalid choice. Try again.\n";
-//         chooseAdvisor();  // Retry until valid choice
-//     }
-// }
-
+    // Print the advisor's information
+    cout << "Your advisor is: " << advisor.getName() << endl;
+    cout << "Advisor's ability: " << advisor.getAbility() << endl;
+}
 
 

@@ -3,27 +3,28 @@
 #include "Tile.h"
 #include "Player.h"
 
-class Board
-{
+
+class Board {
 private:
     static const int _BOARD_SIZE = 52;
-    Tile _tiles[2][_BOARD_SIZE];
+    Tile _tiles[2][_BOARD_SIZE]; // A 2D array, each player has their own row of tiles
     static const int _MAX_PLAYERS = 2;
     int _player_count;
     int _player_position[_MAX_PLAYERS];
     int _player_tracks[2];
+
     void displayTile(int player_index, int pos);
-    void initializeTiles(int player_index);
+    void initializeTiles(int player_index); // Initializes individual tracks for players
     bool isPlayerOnTile(int player_index, int pos);
 
 public:
-    Board();
-    Board(int player_count, int player_tracks[]);
+    Board(); // Default constructor
+    Board(int player_count, int player_tracks[]); // Constructor with player info
     void displayTrack(int player_index);
-    void initializeBoard();
-    void displayBoard();
-    bool movePlayer(int player_index);
+    void initializeBoard(); // Initializes all boards (tracks) for players
+    void displayBoard(); // Displays both boards
+    bool movePlayer(int player_index, int roll);
     int getPlayerPosition(int player_index) const;
+    void getColor();
 };
-
 #endif

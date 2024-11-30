@@ -6,10 +6,93 @@
 #include "Game.h"
 using namespace std;
 
-Game::Game() {
-
-    _player_count= MAX_PLAYER; // initilize game to default settings
+Game::Game() { // initilize game to default settings
+ 
+    _player_count= MAX_PLAYER; 
+     for (int i = 0; i < NUM_ADVISOR; ++i) {
+            advisor[i] = Advisor(); // Use default constructor for each advisor
+        }
 }
+
+void Game::loadAdvisor(string file, Advisor arr[]) {
+    ifstream inFile(file);
+    if (!inFile.is_open()) {
+        cout << "Error: Unable to open file " << endl;
+        return;
+    }
+
+    string line;
+    int index = 0;
+
+    while (getline(inFile, line) && index < NUM_ADVISOR) {
+        vector <string> tokens;
+        stringstream ss(line);
+        string token;
+
+        // Split the line by '|'
+        while (getline(ss, token, '|')) {
+            tokens.push_back(token);
+        }
+
+        // Ensure the line has exactly three parts: id, name, and ability
+        if (tokens.size() == 3) {
+            int id = stoi(tokens[0]);  // Convert first token to integer
+            string name = tokens[1];
+            string ability = tokens[2];
+
+            // Create and store the advisor
+            arr[index] = Advisor(id, name, ability);
+            index++;
+        } else {
+            cout << "Warning: Skipping invalid line in file: " << endl;
+        }
+    }
+
+    inFile.close();
+
+    // Confirmation
+    cout << "Advisors loaded successfully!"<< endl;
+    cout<< " " << endl;
+}
+
+
+void Game::chooseAdvisor(int playing) {
+    bool validChoice = false;
+    int advisorChoice;
+
+    while (!validChoice) {
+        cout << "Player " << (playing + 1) << ", choose your advisor: " << endl;
+
+        // Display available advisors
+        for (int j = 0; j < NUM_ADVISOR; j++) {
+            cout << advisor[j].getID() << ". " << advisor[j].getName() 
+                 << " - " << advisor[j].getAbility() << endl;
+        }
+
+        cout << "Enter the number corresponding to your choice: ";
+        cin >> advisorChoice;
+
+        // Validate choice
+        if (advisorChoice >= 1 && advisorChoice <= NUM_ADVISOR) {
+            // Check if the advisor is already chosen
+            if (!advisor[advisorChoice - 1].isChosen()) {
+                _player[playing].setAdvisor(advisor[advisorChoice - 1]);  // Assign advisor to player
+                advisor[advisorChoice - 1].setChosen(true);  // Mark the advisor as chosen
+                validChoice = true;
+            } else {
+                cout << "This advisor has already been chosen. Please select a different one.\n";
+            }
+        } else {
+            cout << "Invalid choice. Please enter a valid advisor number.\n";
+        }
+    }
+
+    // Display the chosen advisor
+    cout << "Player " << (playing + 1) << " chose " << _player[playing].getAdvisor().getName()
+         << " as their advisor with ability: " 
+         << _player[playing].getAdvisor().getAbility() << endl;
+}
+
 
 
 void Game::whichCharacter() {
@@ -37,11 +120,11 @@ void Game::whichCharacter() {
         getline(ss, temp, '|'); wisdom = stoi(temp);
         getline(ss, temp, '|'); pridePoints = stoi(temp);
 
-        lions.push_back(Player(name, strength, stamina, wisdom, age));
+        lions.push_back(Player(name, strength, stamina, wisdom, age, pridePoints));
     }
     file.close();
 
-    int chosen_tracks[MAX_PLAYER];
+    int chosen_tracks[MAX_PLAYER]; // Array to store each player's track choice
 
     // Players take turns selecting lions
     for (int c = 0; c < _player_count; c++) {
@@ -79,36 +162,42 @@ void Game::whichCharacter() {
         // Remove the selected lion from the available list
         lions.erase(lions.begin() + (choice - 1));
 
-         cout << "Player " << c + 1 << ", choose your path:" << endl;
+        // Choose the player's path
+        cout << "Player " << c + 1 << ", choose your path:" << endl;
         cout << "0: Cub Training 1: Pride Lands" << endl;
         cin >> chosen_tracks[c];
 
-          while (chosen_tracks[c] != 0 && chosen_tracks[c] != 1) {
+        while (chosen_tracks[c] != 0 && chosen_tracks[c] != 1) {
             cout << "Invalid choice. Please enter 0 for Cub Training or 1 for Pride Lands: ";
             cin >> chosen_tracks[c];
         }
-        if (chosen_tracks[c] == 0){
-                
-                _player[c].trainCub(_player[c].getStrength(), _player[c].getStamina(), _player[c].getWisdom());
-                //_player[c].chooseAdvisor();
 
-            }else{
-                _player[c].toPrideLands();
-            }
+        // Perform action based on the chosen path
+        if (chosen_tracks[c] == 0) {
+            _player[c].trainCub(_player[c].getStrength(), _player[c].getStamina(), _player[c].getWisdom());
+            chooseAdvisor(c);
+ // You may add advisor selection here if needed
+        } else {
+            _player[c].toPrideLands();
+        }
+
+        // Assign the corresponding board for the player
+        _board = Board(_player_count, chosen_tracks); // Assign individual board
     }
-            
 
-    _board = Board(_player_count, chosen_tracks);
-    
-    cout << "Both players have chosen their lions and selected there paths!" << endl;
+    cout << "Both players have chosen their lions and selected their paths!" << endl;
 }
 
 
 
 
 
-
 void Game::startGame() {
+    cout<< "LOADING DATA..."<< endl;
+    cout<< "Lions loaded successfully!"<<endl;
+    loadAdvisor ("advisor.txt", advisor);
+
+    
     string enter;
     cout << "Welcome to the Circle of Life!" << endl;
     cout << "Press Enter to continue." << endl;
@@ -119,18 +208,28 @@ void Game::startGame() {
     cout << "Press Enter to continue." << endl;
     getline(cin, enter);
 
-    whichCharacter(); // Allow players to choose characters
+    // Call whichCharacter to let players choose their characters
+    whichCharacter();
+
 
     cout << "Let the game begin!" << endl;
-
-    _board.displayBoard();
-
-    takeTurn();
     
-}
+    // Display the board for each player
+   
+        _board.displayBoard();  // Display each player's board
+    
+
+    // Begin game loop where each player takes turns
+    
+            takeTurn();  // Assuming takeTurn takes an index of the player
+        
+    }
+
+
 
 
     void Game::takeTurn(){
+        srand(time(nullptr));
         bool gamePlay = true;
         int currentPlayer= 0;
 
@@ -168,16 +267,39 @@ void Game::startGame() {
             cout<< "|++++++++++++++++++++++++++++++++|" << endl;
             break;
 
-             //case 3:
-             //cout<< _board.displayBoard()<< endl;
-            // cout<< "Current position" << _player[currentPlayer].getPlayerPosition();
-             //break;
+             case 3:
+              _board.displayBoard();
 
-            //case 4:
+            cout<< "Player "<<(currentPlayer+1)<< "'s Current position " << _board.getPlayerPosition(currentPlayer)<<endl;
+            break;
+
+            case 4:
+            cout<< "your advisor is";
+           _player[currentPlayer].printAdvisor();
+
+            break;
+
+        case 5:
+            int roll;
+            roll = (rand()%6)+1;
+            cout<< "Player" << (currentPlayer+1) <<": rolled a " << roll<< "!"<<endl;
+
+            if(_board.movePlayer(currentPlayer, roll)){
+                cout<< "Player " << (currentPlayer+1) << "reached the end" << endl;
+                gamePlay=false;
+            }else{
+                currentPlayer=(currentPlayer+1) % 2;
+            }
+            break;
+
+            default:
+            cout<< "invalid Choice" << endl;
+            break;
             
          }
 
         }
+         
 
     //   this function is used to controll the game and have each player take turns playing
     // in this function the user is able to do 5 main things (this should most likely be done in a switch statment)

@@ -7,6 +7,7 @@ using namespace std;
 #include "Board.h"
 #include "Player.h"
 #include <vector>
+#include "Advisor.h"
 
 class Game{
     private:
@@ -15,8 +16,9 @@ class Game{
     int _player_count; // tracks the number of plauer
     Board _board; // intance of board
     void takeTurn (); // handle players turns//void takeTurn(int whosPlaying); // this will allow you to role a dice, check you stats, see what tile you are on... 
-    // whos playing 
-    //void showBoard();  // diplslay the game board
+   static const int NUM_ADVISOR =5;
+   Advisor advisor[NUM_ADVISOR];
+ 
 
 
     public:
@@ -26,6 +28,10 @@ class Game{
      void whichCharacter();
     void startGame(); // choose charater, choose what land go to
     void endgame(); // wen last tile, who has most pride points
+    bool ending();
+    void loadAdvisor(string file, Advisor arr[]);
+    void chooseAdvisor (int playing);
+
 
 
 

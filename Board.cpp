@@ -8,6 +8,8 @@
 #define ORANGE "\033[48;2;230;115;0m" /* Orange (230,115,0) */
 #define GREY "\033[48;2;128;128;128m" /* Grey (128,128,128) */
 #define RESET "\033[0m"
+#include <cstdlib> // For rand() and srand()
+#include <ctime>   // For time()
 
 Board::Board() {
     _player_count = 0;
@@ -26,6 +28,7 @@ Board::Board() {
     }
 }
 
+
 void Board::initializeBoard()
 {
     // Seed random number generator in your main function once
@@ -35,8 +38,7 @@ void Board::initializeBoard()
     }
 }
 
-#include <cstdlib> // For rand() and srand()
-#include <ctime>   // For time()
+
 
 
 
@@ -134,19 +136,6 @@ void Board::initializeTiles(int player_index)
              if (color_choice > oasisChance && color_choice < challengingChance){ //purple
                 temp.color = 'U';
             } 
-            
-            
-
-
-
-
-
-            
-            
-
-
-
-      
 
         // Assign the tile to the board for the specified lane
         
@@ -169,7 +158,7 @@ void Board::initializeTiles(int player_index)
 
 
 
-Board::Board(int player_count, int chosen_tracks[2])  // [0,0], [0,1]
+Board::Board(int player_count, int chosen_tracks[])  // [0,0], [0,1]
 {
     if (player_count > _MAX_PLAYERS)
     {
@@ -198,6 +187,7 @@ bool Board::isPlayerOnTile(int player_index, int pos)
     {
         return true;
     }
+    
     return false;
 }
 
@@ -273,10 +263,10 @@ void Board::displayBoard()
     }
 }
 
-bool Board::movePlayer(int player_index)
+bool Board::movePlayer(int player_index, int roll)
 {
     // Increment player position
-    _player_position[player_index]++;
+    _player_position[player_index]+=roll;
     if (_player_position[player_index] == _BOARD_SIZE - 1)
     {
         // Player reached last tile

@@ -45,6 +45,8 @@
 
 #include <string>
 #include <iostream>
+#include "Board.h"
+#include "Advisor.h"
 using namespace std;
 
 class Player {
@@ -55,14 +57,15 @@ private:
     int _pride_points;
     int _strength;  // Added strength (missing in your initial code)
     int _age;
-    //string _advisorName;
-    int _advisorBoost;
+    
+    Advisor _advisor;
+   
 
 
 public:
     // Constructors
     Player();  // Default constructor
-    Player(string name, int strength, int stamina, int wisdom, int age);
+    Player(string name, int strength, int stamina, int wisdom, int age, int pridePoints);
 
     // Getters
     string getName();
@@ -71,6 +74,7 @@ public:
     int getWisdom();
     int getPridePoints();
     int getAge();
+    //Board getBoard();
     // string getAdvisor();
     // int getBoost();
     
@@ -89,6 +93,17 @@ public:
     void toPrideLands();
     void printStats();
     //void chooseAdvisor():
+
+    Advisor getAdvisor();
+
+    void setAdvisor ( Advisor advisor);
+
+     void chooseAdvisor(int);
+
+     void printAdvisor();
+
+
+    
 };
 
 #endif
