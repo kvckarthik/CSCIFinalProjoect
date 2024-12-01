@@ -38,7 +38,11 @@ void Board::initializeBoard()
     }
 }
 
-
+int Board:: getPathType (int player_index)   
+{
+    _pathType = _player_tracks[player_index];
+    return _pathType;
+}
 
 
 
@@ -85,10 +89,10 @@ void Board::initializeTiles(int player_index)
 
             if(chosen_track==0){   //cub
                 if (i < 26) {
-                graveyardChance = 2; // 20% 20
-                heyenaChance= 4;  // 20% 40
-                counclingChance = 90; // 15% 55
-                 oasisChance= 95;  // 25% 80
+                graveyardChance = 20; // 20% 20
+                heyenaChance= 40;  // 20% 40
+                counclingChance = 55; // 15% 55
+                 oasisChance= 80;  // 25% 80
                 challengingChance = 100 ; // 20
 
                 } else {  //second half

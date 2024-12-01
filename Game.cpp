@@ -14,6 +14,53 @@ Game::Game() { // initilize game to default settings
         }
 }
 
+void Game:: loadEvents (string file, Event event[]){
+
+     ifstream inFile(file);
+    if (!inFile.is_open()) {
+        cout << "Error: Unable to open file " << endl;
+        return;
+    }
+
+    string line;
+    int index = 0;
+
+    while (getline(inFile, line) && index < NUM_EVENTS) {
+        vector <string> tokens;
+        stringstream ss(line);
+        string token;
+
+        // Split the line by '|'
+        while (getline(ss, token, '|')) {
+            tokens.push_back(token);
+        }
+
+        // Ensure the line has exactly three parts: id, name, and ability
+        if (tokens.size() == 4) {
+            string description = tokens[0];  
+            int pathType = stoi(tokens[1]); // converts second string to an interger
+            int adID = stoi (tokens[2]);
+            int prideP = stoi (tokens [3]);
+            
+
+            // Create and store the advisor
+            event[index] = Event(description, pathType, adID, prideP);
+            index++;
+        } else {
+            cout << "Warning: Skipping invalid line in file: " << endl;
+        }
+    }
+
+    inFile.close();
+
+    // Confirmation
+    cout << "Events loaded successfully!"<< endl;
+    
+}
+
+
+
+
 void Game::loadAdvisor(string file, Advisor arr[]) {
     ifstream inFile(file);
     if (!inFile.is_open()) {
@@ -52,7 +99,7 @@ void Game::loadAdvisor(string file, Advisor arr[]) {
 
     // Confirmation
     cout << "Advisors loaded successfully!"<< endl;
-    cout<< " " << endl;
+    
 }
 
 
@@ -95,7 +142,7 @@ void Game::chooseAdvisor(int playing) {
          << _player[playing].getAdvisor().getAbility() << endl;
 
     }
-    cout<< "You already have an advisor"<< endl;
+    cout<< "You have an advisor"<< endl;
     cout<< " "<< endl;
 }
 
@@ -197,46 +244,68 @@ void Game::whichCharacter() {
 
 
 
-void Game:: triggerEvent(int playerIndex, Player player){
-    int postion = _board.getPlayerPosition(playerIndex);
-    char tileColor= _board.getTileColor(playerIndex, postion);
+void Game:: triggerEvent(int player_Index, Player player){
+    int postion = _board.getPlayerPosition(player_Index);
+    char tileColor= _board.getTileColor(player_Index, postion);
 
         switch (tileColor){
             case 'B':  // Oasis Tile
         cout << "You've landed on an Oasis Tile! You gain extra resources."<<endl;
-        _player[playerIndex].train(200, 200, 200);
-       
-        
+        _player[player_Index].train(200, 200, 200);
+        cout << "You gained an extra turn!" << endl;
+        takeTurn();
+        cout<< " "<< endl;
         // Perform oasis-specific actions
         break;
     case 'P':  // Counseling Tile
         cout << "Welcome to the Counseling Tile! You gain wisdom and can choose an advisor."<<endl;
-         _player[playerIndex].train(300, 300, 300);
-         chooseAdvisor(playerIndex);
+         _player[player_Index].train(300, 300, 300);
+         chooseAdvisor(player_Index);
+         cout<< " "<< endl;
         // Perform counseling-specific actions
         break;
     case 'R':  // Graveyard Tile
         cout << "Oh no, you stumbled into the Graveyard! You lose resources."<<endl;
+        cout<< " "<< endl;
         // Perform graveyard-specific actions
         break;
     case 'N':  // Hyenas Tile
         cout << "Watch out, Hyenas are here! You return to your previous position."<<endl;
+        cout<< " "<< endl;
         // Perform hyenas-specific actions
         break;
     case 'U':  // Challenge Tile
         cout << "It's a Challenge Tile! Solve a riddle to gain wisdom."<<endl;
+        cout<< " "<< endl;
         // Perform challenge-specific actions
         break;
     case 'O':  // End Tile
         cout << "You've reached Pride Rock, the end of the game!"<<endl;
+        cout<< " "<< endl;
         // End game or perform final actions
         break;
     case 'Y':  // Start Tile
         cout << "You're at the starting tile. Begin your journey!"<<endl;
+        cout<< " "<< endl;
         break;
     case 'G':  // Regular Tile
-        cout << "You're on a regular tile. Rolling for random events..."<<endl;
+    int chance;
+        chance = (rand()%2)+1; // 50% chance nothing happens
+    
+        cout << "You're on a Grass land tile. Rolling for random events..."<<endl;
+
+        // calls a function that goes to a random event paramter is player index
+        if(chance == 1){
+        cout<< "Nothing happened, Enjoy the green grass and blue skys!" << endl;
+         }else{
+
+         greenTileEvent(player_Index);
+         }
+
+
         // Roll for random events, potentially affecting player pride points
+        cout<< " "<< endl;
+
         break;
     default:
         cout << "Unknown tile. Nothing happens." <<endl ;
@@ -244,10 +313,7 @@ void Game:: triggerEvent(int playerIndex, Player player){
 
         }
 
-
-
 }
-
 
 
 
@@ -255,6 +321,9 @@ void Game::startGame() {
     cout<< "LOADING DATA..."<< endl;
     cout<< "Lions loaded successfully!"<<endl;
     loadAdvisor ("advisor.txt", advisor);
+    loadEvents ("events.txt", event);
+    cout << "-------------------------------------------"<<endl;
+    cout<< ""<< endl;
 
     
     string enter;
@@ -281,13 +350,13 @@ void Game::startGame() {
     // Begin game loop where each player takes turns
     
             takeTurn();  // Assuming takeTurn takes an index of the player
-        
     }
 
 
 
 
-    void Game::takeTurn(){
+
+ void Game::takeTurn(){
         srand(time(nullptr));
         bool gamePlay = true;
         int currentPlayer= 0;
@@ -306,6 +375,7 @@ void Game::startGame() {
         int choice;
         int playerPosition;
         char tileType;
+        bool advisorCheck;
         cin>> choice;
 
         switch(choice){
@@ -342,8 +412,17 @@ void Game::startGame() {
             break;
 
             case 4:
-                cout<< "your advisor is";
+                 advisorCheck = _player[currentPlayer].checkAdvisor();
+
+                 if (!advisorCheck){
+                        cout<< "You don't have an advisor"<< endl;
+                        cout << "** You can aquire one if you land on a councling tile **"<< endl;
+                        
+                 }
+                
+                cout<< "Your advisor is";
                 _player[currentPlayer].printAdvisor();
+                cout<< " "<< endl;
 
             break;
 
@@ -370,7 +449,7 @@ void Game::startGame() {
          }
 
         }
-    }
+ }
 
     //   this function is used to controll the game and have each player take turns playing
     // in this function the user is able to do 5 main things (this should most likely be done in a switch statment)
@@ -383,7 +462,65 @@ void Game::startGame() {
 // be able to "roll a random number" and move through the boared
 
 // how can I implement a way for each user to switch between playing while the game is going
+
+ // event is a struct that will be implemented into greenTileEVent   
+
+
+void Game:: greenTileEvent(int player_index){
+
+    cout<< "AN EVENT WAS TRIGGERED!" << endl;
+    srand(time(nullptr));
+    int ppathType= _board.getPathType(player_index); // the player path type
+    int pAdvisorID = _player[player_index].getAdvisor().getID(); // the players chosen advisor
+
+    int eventIndex = rand() % NUM_EVENTS;
+
+    cout << "ETEST VENT INDEX" << eventIndex << endl;
+
+    Event selectedEvent = event[eventIndex];
+
+    int eventPathType = selectedEvent.getPath();  // Get event's path type
+    int eventAdvisorID = selectedEvent.getAdID(); 
+    int eventPridePoints = selectedEvent.getPP();
+    string eventDescription =  selectedEvent.getDes();
+
+    if(eventPathType == 2 || eventPathType == ppathType){
+        if (eventAdvisorID != pAdvisorID && eventAdvisorID != 0){
+            cout << "OH NO! " << eventDescription << endl;
+            cout<< "You lossed " << eventPridePoints << " Pride Points.5" << endl;
+            _player[player_index].prideChange(eventPridePoints);
+        } else if (eventAdvisorID == pAdvisorID && pAdvisorID !=0){
+            cout << eventDescription << endl;
+            cout << "Your Advisor";
+            _player[player_index].printAdvisor();
+            cout<< " saved you!"<< endl;
+        }
+            else{
+                cout << "YOUR SAFE!"<< endl;
+            }
+
     
+        } 
+    }
+
+// the events is an array and a randome muber generator randevents = (rand()%6)+1; will choose the event
+
+    // the values of pathType and advisorID will be compared to the playerspth type and playeradvisor
+    // this is the tricky part however
+    // if the generator selects this Desert storm sweeps through the territory|2|4|-500 and the player has 4 then nothing happens
+    // but if the player does not have and advisor Extra energy from bountiful season|1|0|800 player pAdvisorID=0; then they gain points
+    // so if theres a number that not 0 associated to the adviosr ID and the player has that ID then nothing happens else they loose pridepoints
+    // if the player doesnt have a advisorID and the random geneator prompts and event that has 0 as an advisorID then they will gain pridepoints
+    // how do i correctly implment this complex idea, 
+    // in the event.h im thinking of adding these functions
+    //int geteventID()
+    //int getEventPath()
+    // and for pride points that will be implmented into the player function as it changes the players pirdepoint stats
+
+
+    //compare the players path type and adviosrID to the random path type and advisor ID to see if event happens
+
+
 
     void Game:: endgame(){
 

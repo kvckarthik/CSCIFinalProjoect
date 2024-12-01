@@ -12,6 +12,7 @@ private:
     int _player_count;
     int _player_position[_MAX_PLAYERS];
     int _player_tracks[2];
+    int _pathType;
 
     void displayTile(int player_index, int pos);
     void initializeTiles(int player_index); // Initializes individual tracks for players
@@ -26,6 +27,8 @@ public:
     bool movePlayer(int player_index, int roll);
     int getPlayerPosition(int player_index) const;
     char getTileColor(int player_index,int rolledPostion);
+    int getPathType (int player_index); // gets the value 0 - cub taining or 1- pridelands, this is helpful for tile events
+    
     
 };
 #endif

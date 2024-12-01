@@ -45,6 +45,7 @@ public:
     void setPridePoints(int pride_points);
     void setAge(int age);
     void editAdvisor(bool hasAdvisor);
+    void  prideChange (int pridePoints);
     // void assignAdvisor(string advisorName, int advisorBoost);
 
     // Other Methods
