@@ -15,11 +15,9 @@ private:
     int _pride_points;
     int _strength;  // Added strength (missing in your initial code)
     int _age;
-    
     Advisor _advisor;
     bool _hasAdvisor = false;
-   
-
+    bool _end = false;
 
 public:
     // Constructors
@@ -34,6 +32,8 @@ public:
     int getPridePoints();
     int getAge();
     bool checkAdvisor();
+    bool getEnd(); 
+      
   
     
 
@@ -49,8 +49,8 @@ public:
     // void assignAdvisor(string advisorName, int advisorBoost);
 
     // Other Methods
-    void trainCub(int strength, int stamina, int wisdom);
-    void train(int strength, int stamina, int wisdom);
+    void trainCub();
+    void train (int strength, int stamina, int wisdom);
     void toPrideLands();
     void printStats();
     //void chooseAdvisor():
@@ -62,6 +62,9 @@ public:
      void chooseAdvisor(int);
 
      void printAdvisor();
+
+    void setEnd(bool);
+
 
 
     

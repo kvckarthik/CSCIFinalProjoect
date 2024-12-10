@@ -1,0 +1,28 @@
+
+ tiles
+  heyena
+  - go back 10 tiles.  done ..
+  grave yard
+   -need to makes sure that they go back to previous roll done 
+   random  done..
+
+
+Riddle tile:
+   get a file stream to read file and split done
+   find a way to read and asnwer it done 
+   mkae a class? done 
+   add more riddles
+
+
+Main menu:
+options should have secondary selection * only two
+
+end game:
+need both players to finish the game to end it
+bool expresion true, false, end (bool)
+board = 52 
+if (player0 ==52 and player2 == 52)- go to end game;
+
+3
+3
+

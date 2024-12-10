@@ -18,6 +18,8 @@ Player::Player()
     Advisor _advisor;
     
     
+    
+    
 }
 
 Player::Player(string name, int strength, int stamina, int wisdom, int age, int pridePoints)
@@ -73,13 +75,14 @@ int Player::getAge() {
     return _age;
 }
 
-// string Player::getAdvisor(){
-//     return _advisorName;
-// }
+bool Player:: getEnd(){
+    return _end;
+}
 
-// int Player:: getBoost(){
-// return _advisorBoost;
-// }
+void Player:: setEnd(bool end){
+    _end = end;
+}
+
 
 void Player::setName(string name) {
     _name = name;
@@ -114,7 +117,7 @@ void Player:: prideChange(int pridePoints){
 }
 
 
-void Player::trainCub(int strength, int stamina, int wisdom) {
+void Player::trainCub() {
     // Increase stats when training
     cout<< "You have entered Cub training"<< endl;
     _strength += 500;

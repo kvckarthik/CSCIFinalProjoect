@@ -13,6 +13,9 @@ int main() {
     
 }
 
+//g++ -std=c++17 -g Game.cpp DriveGame.cpp Player.cpp Board.cpp Advisor.cpp Events.cpp Riddles.cpp
+//compile
+
 
 
 
