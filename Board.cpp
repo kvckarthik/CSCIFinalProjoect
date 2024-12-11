@@ -42,7 +42,9 @@ int Board::getPathType(int player_index) {
 
 // change this
 void Board::initializeTiles(int player_index) {
-  srand(time(0));
+    int seed = time(0);
+    srand(seed);
+    
     Tile temp;
     int green_count = 0;
     int total_tiles = _BOARD_SIZE;

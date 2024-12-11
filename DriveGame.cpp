@@ -6,6 +6,10 @@
 using namespace std;
 
 int main() {
+    // int seed = time(0);
+    // cout << "Generating Seed: " << seed << endl << endl;
+    // srand(seed);
+
     Game game;
     game.startGame();
     return 0;

@@ -42,7 +42,7 @@ class Game{
     void loadEvents (string file, Event arr[]);
     void loadRiddles (string file, Riddles arr[]);
     void chooseAdvisor (int player_index); // int playing is the index for whos playing, player one or player two
-    void triggerEvent(int player_index, Player player);
+    bool triggerEvent(int player_index, Player player);
 
     void greenTileEvent (int player_index);
     void riddleTiles (int player_index);

@@ -1,3 +1,7 @@
+#define RED "\033[48;2;230;10;10m"
+#define BLUE "\033[48;2;10;10;230m"
+#define GREY "\033[48;2;128;128;128m" /* Grey (128,128,128) */
+#define RESET "\033[0m"
 #include "Game.h"
 #include <fstream>
 #include <iostream>
@@ -262,7 +266,7 @@ void Game::whichCharacter() {
     cout << "Both players have chosen their lions and selected their paths!" << endl;
 }
 
-void Game::triggerEvent(int player_Index, Player player) {
+bool Game::triggerEvent(int player_Index, Player player) {
     int postion = _board.getPlayerPosition(player_Index);
     char tileColor = _board.getTileColor(player_Index, postion);
     bool advisorCheck;
@@ -275,8 +279,7 @@ void Game::triggerEvent(int player_Index, Player player) {
         cout << "200 Strength, Wisdom, and Stamina "<<endl;
         _player[player_Index].train(200, 200, 200);
         cout << "You gained an extra turn!" << endl;
-        _board.displayBoard();
-        takeTurn(player_Index);
+        return true;
 
         // Perform oasis-specific actions
         break;
@@ -352,6 +355,7 @@ void Game::triggerEvent(int player_Index, Player player) {
         cout << "Unknown tile. Nothing happens." << endl;
         break;
     }
+    return false;
 }
 
 void Game::startGame() {
@@ -389,6 +393,7 @@ void Game::startGame() {
     // Display the board for each player
 
     _board.displayBoard(); // Display each player's board
+    cout << ""<< endl;
 
     // Begin game loop where each player takes turns
     int currentPlayer = 0;
@@ -404,9 +409,13 @@ void Game::takeTurn(int currentPlayer) {
             continue;
         }
 
-        srand(time(nullptr));
+        // srand(time(nullptr));
 
-            cout << "Player " << (currentPlayer + 1) << "'s turn!" << endl;
+            if (currentPlayer==0){
+            cout << RED << " %     Player " << (currentPlayer + 1) << "'s turn!      %" << RESET <<endl;
+            }else{
+                cout << BLUE << " %     Player " << (currentPlayer + 1) << "'s turn!      %" << RESET <<endl;
+            }
             cout << " |*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*--*-*--*-*-*-*|" << endl;
             cout << " |                      What would you like to do?                 |" << endl;
             cout << " |                      1. Check Player Progress                   |" << endl;
@@ -427,8 +436,8 @@ void Game::takeTurn(int currentPlayer) {
             case 1:
                 cout << "|++++++++++++++++++++++++++++++++|" << endl;
                 cout << "  pridePoints: " << _player[currentPlayer].getPridePoints() << endl;
-                cout << "|++++++++++++++++++++++++++++++++|" << endl;
                 cout << "  Leadership traits:" << endl;
+                cout << "  ================================"<< endl;
                 cout << "  Strength: " << _player[currentPlayer].getStrength() << endl;
                 cout << "  Stamina: " << _player[currentPlayer].getStamina() << endl;
                 cout << "  Wisdom: " << _player[currentPlayer].getWisdom() << endl;
@@ -453,6 +462,7 @@ void Game::takeTurn(int currentPlayer) {
                 tileType = _board.getTileColor(currentPlayer, playerPosition);
 
                 cout << "Tile type: " << tileType << endl;
+                cout << " "<< endl;
 
                 break;
 
@@ -473,6 +483,7 @@ void Game::takeTurn(int currentPlayer) {
                 int roll;
                 roll = (rand() % 6) + 1;
                 cout << "Player" << (currentPlayer + 1) << ": rolled a " << roll << "!" << endl;
+                cout << GREY << "=========================="<< RESET <<endl; 
 
                 _board.setRoll(roll);
 
@@ -485,10 +496,13 @@ void Game::takeTurn(int currentPlayer) {
                     _board.displayBoard();
                     endgame(currentPlayer);
                 } else {
-                    triggerEvent(currentPlayer, _player[currentPlayer]);
-                    currentPlayer = (currentPlayer + 1) % 2; 
+                    if (!triggerEvent(currentPlayer, _player[currentPlayer])) {
+
+                        currentPlayer = (currentPlayer + 1) % 2; 
+                    };
                     _board.displayBoard();
                 }
+                cout << " " <<endl;
                 break;
 
             default:
@@ -499,72 +513,10 @@ void Game::takeTurn(int currentPlayer) {
 }
   
 
-//   this function is used to controll the game and have each player take turns playing
-// in this function the user is able to do 5 main things (this should most likely be done in a switch statment)
-// check the main menu (which will be its own function that I have no created yet)
-//    1 . Check Player Progress: Review Pride Point and Leadership Trait stats.
-// 2. Review Character: Check your character name and age.
-// 3. Check Position: Display board to view current position.
-// 4. Review your Advisor: Check who your current advisor is on the game.
-// 5. Move Forward: For each player’s turn, access this option to spin the virtual spinner.
-// be able to "roll a random number" and move through the boared
-
-// how can I implement a way for each user to switch between playing while the game is going
-
-// event is a struct that will be implemented into greenTileEVent
-
-// void Game::greenTileEvent(int player_index) {
-
-
-//     cout << "AN EVENT WAS TRIGGERED!" << endl;
-//     srand(time(nullptr));
-//     int ppathType = _board.getPathType(player_index);            // the player path type
-//     int pAdvisorID = _player[player_index].getAdvisor().getID(); // the players chosen advisor
-//     bool advisorCheck = _player[player_index].checkAdvisor();
-//     string pathName;
-//     if (ppathType==0){
-//         pathName= "CUB LANDS";
-//     }else{
-//         pathName= "PRIDE LANDS";
-//     }
-
-
-//     int eventIndex = rand() % NUM_EVENTS;
-
-//     Event selectedEvent = event[eventIndex];
-
-//     int eventPathType = selectedEvent.getPath(); // Get event's path type
-//     int eventAdvisorID = selectedEvent.getAdID();
-//     int eventPridePoints = selectedEvent.getPP();
-//     string eventDescription = selectedEvent.getDes();
-
-//     cout << "TEST INDEX: "<< eventIndex << " Path: " << eventPathType << ", adID: " << eventAdvisorID << endl;
-//     if (ppathType == eventPathType){
-//         if (eventAdvisorID == 0) { // checks if advisor index is 0 
-//             cout << eventDescription << endl;
-//             cout << "You gained" << eventPridePoints << " Pride Points" << endl;
-//             _player[player_index].prideChange(eventPridePoints);
-//         }
-//         if (eventAdvisorID != pAdvisorID && eventAdvisorID != 0) {
-//             cout << "OH NO! " << eventDescription << endl;
-//             cout << "You lossed " << eventPridePoints << " Pride Points" << endl;
-//             _player[player_index].prideChange(eventPridePoints);
-//         } else if (eventAdvisorID == pAdvisorID && eventAdvisorID != 0) {
-//             cout << eventDescription << endl;
-//             _player[player_index].printAdvisor();
-//             cout << " saved you!" << endl;
-        
-//         } 
-//     }else{
-        
-//     }
-
-// }
-
 void Game::greenTileEvent(int player_index) {
     cout << "AN EVENT WAS TRIGGERED!" << endl;
 
-    srand(time(nullptr));
+    // srand(time(nullptr));
     int ppathType = _board.getPathType(player_index); // Player's path type
     int pAdvisorID = _player[player_index].getAdvisor().getID(); // Player's advisor ID
     bool advisorCheck = _player[player_index].checkAdvisor();
@@ -578,7 +530,8 @@ void Game::greenTileEvent(int player_index) {
     cout << "Player is on: " << pathName << endl;
 
     // Filter events by player's path type
-    vector<Event> filteredEvents;
+        vector<Event> filteredEvents;
+
     for (int i = 0; i < NUM_EVENTS; ++i) {
         if (event[i].getPath() == ppathType) {
             filteredEvents.push_back(event[i]);
@@ -599,10 +552,9 @@ void Game::greenTileEvent(int player_index) {
     int eventPridePoints = selectedEvent.getPP();
     string eventDescription = selectedEvent.getDes();
 
-    cout << "Event Triggered: " << eventDescription << endl;
-    cout << eventIndex<< endl;
 
-    // Handle event effects based on advisor compatibility
+    cout << "Event Triggered: " << eventDescription << endl;
+        // Handle event effects based on advisor compatibility
     if (eventAdvisorID == 0) {
         cout << "You gained " << eventPridePoints << " Pride Points!" << endl;
         _player[player_index].prideChange(eventPridePoints);
@@ -637,7 +589,7 @@ void Game::greenTileEvent(int player_index) {
 
 void Game::riddleTiles(int player_index) {
     string guess;
-    srand(time(nullptr));
+    // srand(time(nullptr));
     int riddleIndex = rand() % NUM_RIDDLES;
 
     Riddles selectedRiddles = riddles[riddleIndex];
@@ -665,18 +617,20 @@ void Game::endgame(int player_index) {
     if (endPlayer1 && endPlayer2) {
         int pointsPlayer1 = ((_player[0].getStamina() + _player[0].getWisdom() + _player[0].getStrength()) % 100) * 1000 + _player[0].getPridePoints();
         int pointsPlayer2 = ((_player[1].getStamina() + _player[1].getWisdom() + _player[1].getStrength()) % 100) * 1000 + _player[1].getPridePoints();
-        cout << "TEST: player 1:" << pointsPlayer1 << "TEST: points 2: " << pointsPlayer2 << endl;
+        cout << "Player 1's total points:" << pointsPlayer1 <<  "Player 2's total points: " << pointsPlayer2 << endl;
+        cout<< "---------------------------------------------------------------------------------------------------"<< endl;
         cout << "Congraulations lion " << _player[0].getName() << " and " << _player[1].getName() << endl;
         cout << "You have travled across the dangerous and adventurous terrain of the Savannah desert. " << endl;
         cout << "The Wisdom, Strength, stamina, and pride you have gained has been incredible" << endl;
         cout << "The winner is" << endl;
-        cout << "--------------------" << endl;
+        cout << "--------------------------------------------------------------------------------------------------" << endl;
             if (pointsPlayer1 > pointsPlayer2) {
-                cout << "PLAYER 1 WON" << endl;
+                cout<< _player[0].getName()<< endl;
                 _player[0].printStats();
                 cout << "Total Pride Points: " << pointsPlayer1 << endl;
                 cout << "__________________________"<<endl;
             } else{
+                cout<< _player[1].getName()<< endl;
                 cout << "PLAYER 2 WON " << endl;
                 _player[1].printStats();
                 cout << "Total Pride Points: " << pointsPlayer2 << endl;
